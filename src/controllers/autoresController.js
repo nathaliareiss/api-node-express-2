@@ -40,7 +40,7 @@ class AutorController {
   
         res.status(201).send(autorResultado.toJSON());
       } catch (erro) {
-        rnext(erro)
+        next(erro)
       }
     }
   
