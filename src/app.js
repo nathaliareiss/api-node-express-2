@@ -11,12 +11,13 @@ db.once("open", () => {
 })
 
 const app = express();
+app.use(cors({origin:'*'}));
 app.use(express.json())
 routes(app);
 
 app.use(manipuladorDeErros)
 
-app.use(cors({origin:'*'}))
+//cor deu erro por colocar apos as rotaas, o jeito e colocar ele antes das rotas
 
 
 export default app
