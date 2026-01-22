@@ -2,17 +2,22 @@ let favoritos = []; // simulando em memória
 
 export const postFavorito = (req, res) => {
   try {
-    const { id, titulo } = req.body;
-    if (!id || !titulo) {
+    const {titulo } = req.body;
+    if (!titulo) {
       return res.status(400).json({ message: "ID e título são obrigatórios" });
     }
+    const id = req.body.id || Date.now().toString();
+
     const livro = { id, titulo };
     favoritos.push(livro);
     res.status(201).json({ message: "Livro adicionado aos favoritos!", livro });
   } catch (error) {
     res.status(500).json({ message: "Erro interno", error: error.message });
   }
+  
 };
+
+
 
 export const getFavoritos = (req, res) => {
   try {
