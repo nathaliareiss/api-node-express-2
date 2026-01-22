@@ -1,46 +1,39 @@
-const { getTodosFavoritos, insereFavorito, deletaFavoritoPorId } = require("../servicos/favorito")
+let favoritos = []; // simulando em memória
 
-function getFavoritos(req, res) {
-    try {
-        const livros = getTodosFavoritos()
-        res.send(livros)
-    } catch (error) {
-        res.status(500)
-        res.send(error.message)
-    } 
-}
-
-function postFavorito(req, res) {
-    try {
-        const id = req.params.id
-        insereFavorito(id)
-        res.status(201)
-        res.send("Livro inserido com sucesso")
-    } catch(error) {
-        res.status(500)
-        res.send(error.message)
+export const postFavorito = (req, res) => {
+  try {
+    const { id, titulo } = req.body;
+    if (!id || !titulo) {
+      return res.status(400).json({ message: "ID e título são obrigatórios" });
     }
-}
+    const livro = { id, titulo };
+    favoritos.push(livro);
+    res.status(201).json({ message: "Livro adicionado aos favoritos!", livro });
+  } catch (error) {
+    res.status(500).json({ message: "Erro interno", error: error.message });
+  }
+};
 
-function deleteFavorito(req, res) {
-    try {
-        const id = req.params.id
+export const getFavoritos = (req, res) => {
+  try {
+    res.json(favoritos);
+  } catch (error) {
+    res.status(500).json({ message: "Erro interno", error: error.message });
+  }
+};
 
-        if(id && Number(id)) {
-            deletaFavoritoPorId(id)
-            res.send("Favorito deletado com sucesso")
-        } else {
-            res.status(422)
-            res.send("ID inválido")
-        }
-    } catch (error) {
-        res.status(500)
-        res.send(error.message)
-    } 
-}
+export const deleteFavorito = (req, res) => {
+  try {
+    const { id } = req.params;
+    const tamanhoAntes = favoritos.length;
+    favoritos = favoritos.filter(livro => livro.id !== id);
 
-module.exports = {
-    getFavoritos,
-    postFavorito,
-    deleteFavorito
-}
+    if (favoritos.length === tamanhoAntes) {
+      return res.status(404).json({ message: "Livro não encontrado nos favoritos" });
+    }
+
+    res.json({ message: "Livro removido dos favoritos!" });
+  } catch (error) {
+    res.status(500).json({ message: "Erro interno", error: error.message });
+  }
+};

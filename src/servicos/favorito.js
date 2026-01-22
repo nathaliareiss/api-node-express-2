@@ -1,4 +1,7 @@
 const fs = require("fs")
+import livros from "../models/Livro"
+
+
 
 function getTodosFavoritos() {
         return JSON.parse( fs.readFileSync("favoritos.json") )
@@ -13,7 +16,7 @@ function deletaFavoritoPorId(id) {
 
 
 function insereFavorito(id) {
-    const livros = JSON.parse( fs.readFileSync("livros.json") )
+    const livros = JSON.parse( fs.readFileSync("favoritos.json") )
     const favoritos = JSON.parse( fs.readFileSync("favoritos.json") )
     const livroInserido = livros.find( livro => livro.id === id)
     const novaListaDeLivrosFavoritos = [...favoritos, livroInserido]
