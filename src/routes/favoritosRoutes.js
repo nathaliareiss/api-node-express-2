@@ -1,9 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const favoritosController = require("./controllers/favoritosController");
+const { Router} = require('express')
+
+const {getFavoritos,postFavorito,deleteFavorito} = require("../controllers/favoritosController");
 
 
-router.post("/favoritos", favoritosController.addFavorito);
+const router = Router
+
+router.post("/favoritos", favoritosController.postFavorito);
 
 
 router.get("/favoritos", favoritosController.getFavoritos);
