@@ -1,10 +1,12 @@
 import express from "express";
 import db from "./config/dbConnect.js"
+import googleRoutes from "./routes/googleRoutes.js";
+import calendarRoutes from "./routes/calendarRoutes.js"
 import cspMiddleware from "./middlewares/csp.js";
 import routes from "./routes/index.js"
 import manipuladorDeErros from "./middlewares/manipuladorDeErros.js";
 import cors from 'cors'
-import calendarRoutes from './routes/calendarRoutes.js'
+
 
 
 
@@ -23,7 +25,10 @@ app.use(cspMiddleware)
 routes(app);
 
 
-app.use('/api/calendar', calendarRoutes)
+app.use((req, res, next) => {
+  req.user = { id: "ID_DO_USUARIO_LOGADO" };
+  next();
+});
 
 
 app.use(manipuladorDeErros)

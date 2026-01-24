@@ -1,10 +1,8 @@
+import express from "express";
+import { criarEvento } from "../controllers/calendarController.js";
 
-import { Router } from 'express';
-import { getEvents } from '../controllers/calendarController.js';
+const router = express.Router();
 
-const router = Router();
-
-
-router.get('/events', getEvents);
+router.post("/calendar/events", criarEvento);
 
 export default router;

@@ -1,21 +1,35 @@
+import { google } from "googleapis";
+import { createOAuthClient } from "../config/googleOAuth.js";
+import GoogleAccount from "../models/googleAccount.js";
 
+async function getAuthClient(userId) {
+  const account = await GoogleAccount.findOne({ userId });
+  if (!account) throw new Error("Google Agenda não conectada");
 
-import 'dotenv/config';
+  const client = createOAuthClient();
+  client.setCredentials({ refresh_token: account.refreshToken });
+  return client;
+}
 
-const API_KEY = process.env.GOOGLE_API_KEY;
-const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
+export async function criarEvento(req, res) {
+  try {
+    const auth = await getAuthClient(req.user.id);
+    const calendar = google.calendar({ version: "v3", auth });
 
-const url='https://www.googleapis.com/calendar/v3'
+    const { summary, description, startISO, endISO } = req.body;
 
-class calendarioController {
+    const result = await calendar.events.insert({
+      calendarId: "primary",
+      requestBody: {
+        summary,
+        description,
+        start: { dateTime: startISO },
+        end: { dateTime: endISO },
+      },
+    });
 
-  static verCalendario = async (req, res, next) => {
-    try { 
-        const response= await fetch(url)
-
-      res.status(200).json(livrosResultado);
-    } catch (erro) {
-      next(erro)
-  }}}
-
-  export default calendarioController
+    res.status(201).json(result.data);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
