@@ -24,7 +24,7 @@ app.use(cspMiddleware)
 
 
 app.use((req, res, next) => {
-  req.user = { id: "ID_DO_USUARIO_LOGADO" };
+  req.user = { id: "Nathalia" };
   next();
 });
 

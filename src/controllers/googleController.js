@@ -3,12 +3,12 @@ import GoogleAccount from "../models/googleAccount.js";
 
 export function connectGoogle(req, res) {
   const userId = req.user.id; 
-console.log("User ID for Google OAuth:", userId);
+  console.log("User ID for Google OAuth:", userId);
 
 
   const client = createOAuthClient();
 
-console.log("OAuth2 Client created:", client);
+ console.log("OAuth2 Client created:", client);
 
   const url = client.generateAuthUrl({
     access_type: "offline",
@@ -16,6 +16,7 @@ console.log("OAuth2 Client created:", client);
     scope: SCOPES,
     state: userId,
   });
+  
 console.log("Generated Google OAuth URL:", url);
   res.redirect(url);
 }
