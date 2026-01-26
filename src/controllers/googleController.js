@@ -35,5 +35,5 @@ export async function googleCallback(req, res) {
     );
   }
 
-  res.redirect("http://localhost:3000/google/sucesso");
+  res.redirect("http://localhost:3000/calendar");
 }

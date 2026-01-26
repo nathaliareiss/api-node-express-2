@@ -20,17 +20,15 @@ export async function criarEvento(req, res) {
       },
     });
 
-    // 👇 salvar também no Mongo
-    const evento = await Evento.create({
-      userId: req.userId,
-      titulo: summary,
-      descricao: description,
-      inicio: startISO,
-      fim: endISO,
-      googleEventId: eventoGoogle.data.id
-    });
+    const eventoSalvo = await Evento.create({
+        userId: req.userId,
+        titulo: summary,
+        inicio: startISO,
+        fim: endISO,
+        googleEventId: evento.data.id,
+});
 
-    res.status(201).json(evento);
+res.status(201).json(eventoSalvo);
   } catch (err) {
     res.status(400).json({ mensagem: err.message });
   }

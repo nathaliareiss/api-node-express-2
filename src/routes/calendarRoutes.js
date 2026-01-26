@@ -7,4 +7,6 @@ const router = express.Router();
 router.post("/calendar/events",authMiddleware, criarEvento);
 router.get("/calendar",authMiddleware, listarEventos);
 
+
+
 export default router;
