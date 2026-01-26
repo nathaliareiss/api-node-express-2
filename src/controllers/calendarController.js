@@ -1,15 +1,7 @@
+
 import { google } from "googleapis";
-import { createOAuthClient } from "../config/googleOAuth.js";
-import GoogleAccount from "../models/googleAccount.js";
+import Evento from "../models/Evento.js";
 
-async function getAuthClient(userId) {
-  const account = await GoogleAccount.findOne({ userId });
-  if (!account) throw new Error("Google Agenda não conectada");
-
-  const client = createOAuthClient();
-  client.setCredentials({ refresh_token: account.refreshToken });
-  return client;
-}
 
 export async function criarEvento(req, res) {
   try {
@@ -18,7 +10,7 @@ export async function criarEvento(req, res) {
 
     const { summary, description, startISO, endISO } = req.body;
 
-    const result = await calendar.events.insert({
+    const eventoGoogle = await calendar.events.insert({
       calendarId: "primary",
       requestBody: {
         summary,
@@ -28,8 +20,23 @@ export async function criarEvento(req, res) {
       },
     });
 
-    res.status(201).json(result.data);
+    // 👇 salvar também no Mongo
+    const evento = await Evento.create({
+      userId: req.userId,
+      titulo: summary,
+      descricao: description,
+      inicio: startISO,
+      fim: endISO,
+      googleEventId: eventoGoogle.data.id
+    });
+
+    res.status(201).json(evento);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.status(400).json({ mensagem: err.message });
   }
+}
+
+export async function listarEventos(req, res) {
+  const eventos = await Evento.find({ userId: req.userId });
+  res.json(eventos);
 }

@@ -8,7 +8,7 @@ export const SCOPES = [
 export function createOAuthClient() {
   return new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    process.env.GOOGLE_REDIRECT_URI // 🔥 OBRIGATÓRIO
+    process.env.GOOGLE_CLIENT_SECRET, // Client Secret
+    process.env.GOOGLE_REDIRECT_URI // Callback URL
   );
 }
