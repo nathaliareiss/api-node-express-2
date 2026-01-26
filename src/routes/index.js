@@ -13,12 +13,13 @@ const routes = (app) => {
   })
 
   app.use(
+    authRoutes,
     livros,
     autores,
     favoritos,
     calendarRoutes,
     googleRoutes,
-    authRoutes
+    
   )
 }
 
