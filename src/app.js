@@ -22,20 +22,19 @@ app.use(express.json());
 
 app.use(cspMiddleware)
 
-routes(app);
-
 
 app.use((req, res, next) => {
   req.user = { id: "ID_DO_USUARIO_LOGADO" };
   next();
 });
 
+routes(app);
 
 app.use(manipuladorDeErros)
 
 
 
 //cors deu erro por colocar apos as rotaas, o jeito e colocar ele antes das rotas
-
+//as rotas devem ficar em penultimo. e manipulador de erros sempre por ultimo
 
 export default app
