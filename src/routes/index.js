@@ -4,6 +4,8 @@ import autores from "./autoresRoutes.js"
 import favoritos from "./favoritosRoutes.js"
 import googleRoutes from "./googleRoutes.js"
 import calendarRoutes from './calendarRoutes.js'
+import authRoutes from "./authRoutes.js"
+
 
 const routes = (app) => {
   app.route('/').get((req, res) => {
@@ -15,7 +17,8 @@ const routes = (app) => {
     autores,
     favoritos,
     calendarRoutes,
-    googleRoutes
+    googleRoutes,
+    authRoutes
   )
 }
 
