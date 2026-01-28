@@ -13,21 +13,21 @@ const EventoLeituraSchema = new mongoose.Schema(
       ref: "Livro",
       required: true,
     },
-
-    tipo: {
-      type: String,
-      enum: ["inicio", "fim"],
-      required: true,
-    },
-
-    data: {
-      type: Date,
-      required: true,
-    },
+//vamos registrar para que seja capaz de calcular e inserir no calendario o evento
+    dataInicio: {
+    type: Date,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+
+   dataFim: {
+    type: Date,
+  },
+
+   tempoTotal: {
+    type: Number, // em minutos
+  },
+}, {
+  timestamps: true
+});
 
 export default mongoose.model("EventoLeitura", EventoLeituraSchema);
