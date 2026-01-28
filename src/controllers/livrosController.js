@@ -1,82 +1,103 @@
 
 
-import livros from "../models/Livro.js";
+import Livro from "../models/Livro.js";
 
 
 class LivroController {
 
-  static listarLivros = async (req, res, next) => {
+  //aqui vamos listar os livros da estante do usuario
+
+  static listarMeusLivros = async (req, res, next) => {
     try {
-      const livrosResultado = await livros.find()
-        .populate("autor")
-        .exec();
-
-      res.status(200).json(livrosResultado);
+      const livros = await Livro.find({ userId: req.userId })
+       res.status(200).json(livros);
     } catch (erro) {
-      next(erro)
-  }}
-  static listarLivroPorId = async (req, res, next) => {
-    try {
-      const id = req.params.id;
-
-      const livroResultados = await livros.findById(id)
-        .populate("autor", "nome")
-        .exec();
-
-      res.status(200).send(livroResultados);
-    } catch (erro) {
-     next(erro)
+      next  (erro)
   }}
 
-  static cadastrarLivro = async (req, res, next) => {
+//aqui vamos adicionar livro da google books a estante do usuario
+  static adicionarLivro= async (req, res, next) => {
     try {
-      let livro = new livros(req.body);
+      const{
+        googleBookId,
+        titulo,
+        autores,
+        editora,
+        descricao,
+        thumbnail
+      } = req.body
+    
+  //verificar se o livro ja existe na estante do usuario para evitar duplicidade
+      const livroExistente = await Livro.findOne({
+        googleBookId, 
+        userId: req.userId
+      });
 
-      const livroResultado = await livro.save();
+      if (livroExistente) {
+        return res.status(400).json({ mensagem: "Livro já existe na sua estante" });
+      }
 
-      res.status(201).send(livroResultado.toJSON());
+      const livro = await Livro.create({
+        googleBookId,
+        titulo,
+        autores,
+        editora,
+        descricao,
+        thumbnail,
+        userId: req.userId
+      });
+
+      res.status(201).json(livro);
     } catch (erro) {
-      next(erro)}
-  }
+      next(erro)
+    } }
 
-  static atualizarLivro = async (req, res, next) => {
+//pra inicar a leitura automatico
+  static iniciarLeitura = async (req, res, next) => {
     try {
-      const id = req.params.id;
-
-      await livros.findByIdAndUpdate(id, {$set: req.body});
-
-      res.status(200).send({message: "Livro atualizado com sucesso"});
+      const { id } = req.params;  
+      const livro = await Livro.findOneAndUpdate(
+        { _id: id, userId: req.userId },
+        { 
+          statusLeitura: "lendo",
+          dataInicioLeitura: new Date()
+        },
+        { new: true }
+      );
+      res.json(livro);
+    } catch (erro) {
+      next(erro)
+    } 
+  }
+//finalizar a leitura
+  static finalizarLeitura = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const livro = await Livro.findOneAndUpdate(
+        { _id: id, userId: req.userId },
+        { 
+          statusLeitura: "Lido",
+          dataFinalLeitura: new Date()
+        },
+        { new: true }
+      );
+      res.json(livro);
+    } catch (erro) {
+      next(erro)
+    } 
+  }
+  //favoritar ou desvaforitar um livro
+  static alternarFavorito = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const livro = await Livro.findOne({ _id: id, userId: req.userId });
+      livro.favorito=!livro.favorito;
+      await livro.save();
+      res.json(livro);  
     } catch (erro) {
       next(erro)
     }
   }
-
-  static excluirLivro = async (req, res, next) => {
-    try {
-      const id = req.params.id;
-
-      await livros.findByIdAndDelete(id);
-
-      res.status(200).send({message: "Livro removido com sucesso"});
-    } catch (erro) {
-      next(erro)
     }
-  }
-
-  static listarLivroPorEditora = async (req, res, next) => {
-    try {
-      const editora = req.query.editora;
-
-      const livrosResultado = await livros.find({"editora": editora});
-
-      res.status(200).send(livrosResultado);
-    } catch (erro) {
-      next(erro)
-    }
-  }
-
-
-  }
-
 
 export default LivroController

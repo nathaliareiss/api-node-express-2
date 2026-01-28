@@ -4,11 +4,10 @@ import LivroController from "../controllers/livrosController.js";
 const router = express.Router();
 
 router
-  .get("/livros", LivroController.listarLivros)
-  .get("/livros/busca", LivroController.listarLivroPorEditora)
-  .get("/livros/:id", LivroController.listarLivroPorId)
-  .post("/livros", LivroController.cadastrarLivro)
-  .put("/livros/:id", LivroController.atualizarLivro)
-  .delete("/livros/:id", LivroController.excluirLivro)
+  .get("/livros", LivroController.listarMeusLivros)
+  .post("/livros", LivroController.adicionarLivro)
+  .patch("/livros/:id/iniciar", LivroController.iniciarLeitura)
+  .patch("/livros/:id/finalizar", LivroController.finalizarLeitura)
+  .patch("/livros/:id/favorito", LivroController.alternarFavorito)
 
 export default router;   
