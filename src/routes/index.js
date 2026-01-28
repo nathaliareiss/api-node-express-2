@@ -6,16 +6,20 @@ import googleRoutes from "./googleRoutes.js"
 import calendarRoutes from './calendarRoutes.js'
 import authRoutes from "./authRoutes.js"
 import booksExternalRoutes from "./booksExternalRoutes.js";
+import leitura from "./leituraRoutes.js";
+
+
 
 const routes = (app) => {
   app.route('/').get((req, res) => {
-    res.status(200).send({titulo: "Curso de node"})
+    res.status(200).send({titulo: "Ok, aqui estamos!"})
   })
 
   app.use(
     booksExternalRoutes,
     authRoutes,
     livros,
+    leitura,
     autores,
     favoritos,
     calendarRoutes,
