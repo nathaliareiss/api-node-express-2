@@ -5,7 +5,7 @@ import favoritos from "./favoritosRoutes.js"
 import googleRoutes from "./googleRoutes.js"
 import calendarRoutes from './calendarRoutes.js'
 import authRoutes from "./authRoutes.js"
-
+import booksExternalRoutes from "./booksExternalRoutes.js";
 
 const routes = (app) => {
   app.route('/').get((req, res) => {
@@ -13,6 +13,7 @@ const routes = (app) => {
   })
 
   app.use(
+    booksExternalRoutes,
     authRoutes,
     livros,
     autores,
