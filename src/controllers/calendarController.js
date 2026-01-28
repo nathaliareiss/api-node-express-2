@@ -1,6 +1,6 @@
 
 import { google } from "googleapis";
-import Evento from "../models/Evento.js";
+import Evento from "../models/EventoLeitura.js";
 
 
 export async function criarEvento(req, res) {
